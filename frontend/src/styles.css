@@ -1,0 +1,1370 @@
+/* =================================================================
+   GemForge Arcade — ตู้เกมนีออน + จอ CRT
+   ================================================================= */
+:root {
+  --bg: #07061a;
+  --cab-1: #2a0f4f;
+  --cab-2: #140833;
+  --screen: #050816;
+  --panel: rgba(255, 255, 255, 0.04);
+  --line: rgba(140, 120, 255, 0.28);
+  --text: #eef0ff;
+  --muted: #9a9cc8;
+  --pink: #ff3dbb;
+  --cyan: #2ef2ff;
+  --yellow: #ffd23d;
+  --green: #3dff8b;
+  --red: #ff4058;
+  --blue: #3d8bff;
+  --ok: #3dff8b;
+  --err: #ff5470;
+  --r0: #a8b3c7;
+  --r1: #3ea6ff;
+  --r2: #c46bff;
+  --r3: #ffc53d;
+  --r4: #ff3d8b;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: "Kanit", system-ui, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(900px 500px at 50% -10%, rgba(255, 61, 187, 0.25), transparent 60%),
+    radial-gradient(700px 400px at 100% 100%, rgba(46, 242, 255, 0.12), transparent 60%),
+    linear-gradient(transparent 0 calc(100% - 1px), rgba(46, 242, 255, 0.07) 0) 0 0 / 100% 40px,
+    linear-gradient(90deg, transparent 0 calc(100% - 1px), rgba(46, 242, 255, 0.07) 0) 0 0 / 40px 100%,
+    var(--bg);
+}
+
+.pixel {
+  font-family: "Press Start 2P", "Kanit", monospace;
+  letter-spacing: 1px;
+}
+
+h2,
+h3 {
+  margin: 0 0 12px;
+}
+
+h2.pixel {
+  font-size: 0.8rem;
+  color: var(--cyan);
+  text-shadow: 0 0 8px rgba(46, 242, 255, 0.7);
+}
+
+h3.pixel {
+  font-size: 0.65rem;
+  color: var(--yellow);
+}
+
+code {
+  font-family: ui-monospace, Consolas, monospace;
+  color: var(--cyan);
+}
+
+.arcade {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 16px 90px;
+}
+
+/* ---------- ตัวตู้ ---------- */
+.cabinet {
+  background: linear-gradient(180deg, var(--cab-1), var(--cab-2));
+  border: 3px solid #4c2a8f;
+  border-radius: 28px 28px 18px 18px;
+  padding: 14px;
+  box-shadow:
+    0 0 0 2px #0c0420,
+    0 0 40px rgba(255, 61, 187, 0.35),
+    inset 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- ป้ายไฟ ---------- */
+.marquee {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #1a0533, #0b0220);
+  border: 2px solid var(--pink);
+  box-shadow: 0 0 18px rgba(255, 61, 187, 0.6), inset 0 0 22px rgba(255, 61, 187, 0.25);
+  margin-bottom: 14px;
+}
+
+.marquee-title {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.neon-title {
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  color: #fff;
+  text-shadow: 0 0 4px #fff, 0 0 12px var(--pink), 0 0 26px var(--pink), 0 0 40px var(--pink);
+  animation: flicker 6s infinite;
+}
+
+.neon-sub {
+  font-size: 0.6rem;
+  color: var(--cyan);
+  text-shadow: 0 0 8px var(--cyan);
+}
+
+@keyframes flicker {
+  0%, 92%, 96%, 100% { opacity: 1; }
+  93%, 95% { opacity: 0.55; }
+}
+
+.hud {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hud-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #000;
+  border: 2px solid #3b2a6e;
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.hud-label {
+  font-size: 0.55rem;
+  color: var(--muted);
+}
+
+.hud-value {
+  font-size: 0.9rem;
+  color: var(--yellow);
+  text-shadow: 0 0 8px rgba(255, 210, 61, 0.8);
+}
+
+.hud-unit {
+  font-size: 0.75rem;
+  color: var(--yellow);
+}
+
+.hud-box select {
+  background: transparent;
+  color: var(--green);
+  border: none;
+  font: 0.8rem "Press Start 2P", monospace;
+  cursor: pointer;
+}
+
+.hud-box option {
+  background: #111;
+}
+
+.hud-addr {
+  font-size: 0.7rem;
+  color: var(--green);
+  text-decoration: none;
+}
+
+.hud-addr:hover {
+  text-decoration: underline;
+}
+
+.hud-connect {
+  background: var(--green);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.6rem;
+  cursor: pointer;
+}
+
+.hud-connect:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.chainlog .txh a,
+.notice a.tx {
+  color: inherit;
+  text-decoration: none;
+}
+
+.chainlog .txh a:hover,
+.notice a.tx:hover {
+  text-decoration: underline;
+}
+
+/* ---------- กรอบจอ ---------- */
+.bezel {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 14px;
+}
+
+@media (max-width: 960px) {
+  .bezel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.screen {
+  position: relative;
+  background: radial-gradient(ellipse at center, #0b1030 0%, var(--screen) 75%);
+  border: 10px solid #111;
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9), 0 0 0 2px #2b1b55;
+  min-height: 420px;
+  overflow: hidden;
+}
+
+/* เส้น scanline ของจอ CRT */
+.crt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+  border-radius: 12px;
+}
+
+.boot {
+  text-align: center;
+  margin-top: 120px;
+  color: var(--green);
+}
+
+.blink {
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
+/* ---------- ปุ่มเลือกโหมด ---------- */
+.modes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 560px) {
+  .modes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.mode {
+  --c: var(--red);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 6px;
+  border-radius: 12px;
+  border: 2px solid var(--c);
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--c);
+  cursor: pointer;
+  font: inherit;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.mode span {
+  font-size: 0.65rem;
+}
+
+.mode small {
+  color: var(--text);
+  opacity: 0.8;
+}
+
+.mode.on {
+  background: var(--c);
+  color: #08041a;
+  box-shadow: 0 0 18px var(--c);
+}
+
+.mode.on small {
+  color: #08041a;
+}
+
+.red { --c: var(--red); }
+.blue { --c: var(--blue); }
+.green { --c: var(--green); }
+.yellow { --c: var(--yellow); }
+
+/* ---------- ปุ่มอาร์เคด ---------- */
+.abtn {
+  --c: #6b6f9a;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font: 600 0.95rem "Kanit", sans-serif;
+  color: #fff;
+  cursor: pointer;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 60%, #fff), var(--c) 55%);
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--c) 55%, #000), 0 0 16px color-mix(in srgb, var(--c) 60%, transparent);
+  transition: transform 0.06s, box-shadow 0.06s;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.abtn:active:not(:disabled) {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--c) 55%, #000);
+}
+
+.abtn:disabled {
+  filter: grayscale(0.85) brightness(0.6);
+  cursor: not-allowed;
+}
+
+.abtn.yellow {
+  color: #241600;
+  text-shadow: none;
+}
+
+.abtn.big {
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.85rem;
+  padding: 18px 28px;
+}
+
+.abtn.small {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--c) 55%, #000);
+}
+
+/* ---------- ข้อความ ---------- */
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 10px 0;
+}
+
+.hint.good {
+  color: var(--ok);
+}
+
+.hint.bad {
+  color: var(--err);
+}
+
+.hint.center {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.notice {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  border: 1px solid;
+  font-size: 0.9rem;
+}
+
+.notice.ok {
+  border-color: var(--ok);
+  background: rgba(61, 255, 139, 0.08);
+}
+
+.notice.error {
+  border-color: var(--err);
+  background: rgba(255, 84, 112, 0.1);
+}
+
+.notice span {
+  flex: 1;
+}
+
+.notice .x {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.tx {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.panel.warn {
+  border: 2px dashed var(--yellow);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 60px;
+}
+
+/* ---------- แถบรอเปิดผล ---------- */
+.pending {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  border: 2px solid var(--yellow);
+  background: rgba(255, 210, 61, 0.07);
+  position: relative;
+  z-index: 1;
+}
+
+.pending .pixel {
+  font-size: 0.75rem;
+  color: var(--yellow);
+}
+
+.pending p {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.pending.s2 {
+  border-color: var(--green);
+  box-shadow: 0 0 22px rgba(61, 255, 139, 0.35);
+  animation: pulse-border 1s ease-in-out infinite;
+}
+
+.pending.s2 .pixel {
+  color: var(--green);
+}
+
+.pending.s3 {
+  border-color: var(--err);
+}
+
+@keyframes pulse-border {
+  50% { box-shadow: 0 0 6px rgba(61, 255, 139, 0.2); }
+}
+
+/* ---------- พื้นที่โหมด ---------- */
+.stage {
+  position: relative;
+  z-index: 1;
+}
+
+.stage.gacha {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .stage.gacha {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stage-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.rates {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.rate {
+  text-align: center;
+  border-radius: 8px;
+  padding: 8px 4px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--c);
+  color: var(--c);
+  font-size: 0.75rem;
+}
+
+.rate b {
+  display: block;
+  font-size: 1.1rem;
+}
+
+/* ---------- ตู้กาชา ---------- */
+.machine {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.globe {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 6px solid #ffd9f4;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.25), rgba(120, 200, 255, 0.08) 60%, rgba(0, 0, 0, 0.3));
+  box-shadow: 0 0 30px rgba(255, 61, 187, 0.5), inset 0 0 30px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.cap {
+  position: absolute;
+  width: 18%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, var(--c) 50%, #f4f4ff 50%);
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.cap.r0 { --c: var(--r0); }
+.cap.r1 { --c: var(--r1); }
+.cap.r2 { --c: var(--r2); }
+.cap.r3 { --c: var(--r3); }
+
+.shine {
+  position: absolute;
+  top: 10%;
+  left: 18%;
+  width: 26%;
+  height: 16%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transform: rotate(-30deg);
+}
+
+.machine.cranking .cap {
+  animation: tumble 0.35s ease-in-out infinite alternate;
+}
+
+.machine.cranking .cap:nth-child(odd) {
+  animation-direction: alternate-reverse;
+}
+
+@keyframes tumble {
+  to { transform: translate(-50%, -80%) rotate(40deg); }
+}
+
+.machine-body {
+  position: relative;
+  margin: -12px auto 0;
+  width: 86%;
+  height: 120px;
+  border-radius: 14px 14px 22px 22px;
+  background: linear-gradient(180deg, #ff3dbb, #b0157f);
+  box-shadow: inset 0 -10px 0 rgba(0, 0, 0, 0.25), 0 0 20px rgba(255, 61, 187, 0.4);
+}
+
+.plate {
+  position: absolute;
+  top: 16px;
+  left: 14px;
+  font-size: 0.5rem;
+  background: #000;
+  color: var(--yellow);
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.crank {
+  position: absolute;
+  right: 22px;
+  top: 18px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff6 0 30%, #ffd23d 31% 100%);
+  border: 3px solid #a17a00;
+}
+
+.crank span {
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  width: 8px;
+  height: 30px;
+  margin-left: -4px;
+  border-radius: 4px;
+  background: #fff;
+  transform-origin: 50% 31px;
+}
+
+.machine.cranking .crank span {
+  animation: spin 0.6s linear infinite;
+}
+
+.chute {
+  position: absolute;
+  left: 14px;
+  bottom: 16px;
+  width: 54px;
+  height: 40px;
+  border-radius: 10px;
+  background: #1a0012;
+  box-shadow: inset 0 4px 8px #000;
+  overflow: hidden;
+}
+
+.capsule-out {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--yellow) 50%, #fff 50%);
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: all 0.4s;
+}
+
+.machine.has-capsule .capsule-out {
+  opacity: 1;
+  transform: none;
+}
+
+.machine.ready .capsule-out {
+  animation: shake 0.4s ease-in-out infinite;
+}
+
+@keyframes shake {
+  25% { transform: rotate(-12deg); }
+  75% { transform: rotate(12deg); }
+}
+
+/* ---------- ช่องผสม ---------- */
+.forge {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.slot {
+  flex: 1;
+  min-height: 150px;
+  min-width: 0;
+  border: 2px dashed var(--line);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  padding: 6px;
+}
+
+.slot .empty.pixel {
+  font-size: 0.55rem;
+}
+
+.result-slot {
+  font-size: 1.4rem;
+  color: var(--yellow);
+}
+
+.arrow {
+  align-self: center;
+  color: var(--cyan);
+  font-size: 0.9rem;
+}
+
+.forge.burning .slot:not(.result-slot) {
+  animation: burn 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes burn {
+  to { box-shadow: 0 0 24px var(--red), inset 0 0 18px rgba(255, 64, 88, 0.5); border-color: var(--red); }
+}
+
+.table {
+  margin-top: 16px;
+  display: grid;
+  gap: 6px;
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.table b {
+  color: var(--yellow);
+}
+
+.recipes {
+  margin-top: 18px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.recipe {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  padding: 7px 0;
+  border-top: 1px dashed var(--line);
+  font-size: 0.82rem;
+}
+
+.recipe .to {
+  color: var(--cyan);
+}
+
+.recipe b {
+  color: var(--yellow);
+  font-weight: 600;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .recipe {
+    grid-template-columns: 1fr;
+  }
+  .recipe b {
+    text-align: left;
+  }
+}
+
+/* ---------- ร้านค้า ---------- */
+.shop {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .shop {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--yellow);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.price-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-input input {
+  flex: 1;
+  min-width: 0;
+  background: #000;
+  border: 2px solid var(--yellow);
+  border-radius: 8px;
+  color: var(--yellow);
+  padding: 8px 10px;
+  font: 0.8rem "Press Start 2P", monospace;
+}
+
+.price {
+  font-size: 0.6rem;
+  color: var(--yellow);
+  margin-top: 4px;
+}
+
+.seller {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+/* ---------- กระเป๋า ---------- */
+.bag-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.bag-head h2 {
+  margin: 0;
+}
+
+.counts {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 12px 0 4px;
+  position: relative;
+  z-index: 1;
+}
+
+.count {
+  font: 0.55rem "Press Start 2P", monospace;
+  padding: 5px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--c);
+  color: var(--c);
+}
+
+.bag-hint {
+  font-size: 0.78rem;
+  position: relative;
+  z-index: 1;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.bag .grid {
+  max-height: 640px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+/* ---------- การ์ดไอเทม ---------- */
+.card {
+  --c: var(--r0);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 6px 10px;
+  border-radius: 12px;
+  border: 2px solid var(--c);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--c) 22%, #0a0d26), #070a1f);
+  color: var(--text);
+  text-align: center;
+  transition: transform 0.12s, box-shadow 0.12s, opacity 0.12s;
+  min-width: 0;
+}
+
+.card.clickable {
+  cursor: pointer;
+}
+
+.card.clickable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 16px var(--c);
+}
+
+.card.sel {
+  box-shadow: 0 0 0 3px #fff, 0 0 24px var(--c);
+}
+
+.card.dim {
+  opacity: 0.35;
+}
+
+.card.ghost {
+  opacity: 0.85;
+  border-style: dashed;
+}
+
+.card.small {
+  width: 100%;
+  padding: 8px 4px;
+}
+
+.card.big {
+  width: 230px;
+  margin: 14px auto 6px;
+  padding: 24px 12px 18px;
+}
+
+.r0 { --c: var(--r0); }
+.r1 { --c: var(--r1); }
+.r2 { --c: var(--r2); }
+.r3 { --c: var(--r3); }
+.r4 { --c: var(--r4); }
+
+.card.r3 {
+  box-shadow: 0 0 14px rgba(255, 197, 61, 0.35);
+}
+
+/* Mythic: ขอบรุ้งเคลื่อนไหว */
+.card.r4 {
+  border-color: transparent;
+  background:
+    linear-gradient(180deg, #2a0820, #0a0418) padding-box,
+    linear-gradient(120deg, #ff3d8b, #ffd23d, #3dff8b, #2ef2ff, #c46bff, #ff3d8b) border-box;
+  background-size: 100% 100%, 300% 300%;
+  animation: rainbow 3s linear infinite;
+  box-shadow: 0 0 22px rgba(255, 61, 139, 0.55);
+}
+
+@keyframes rainbow {
+  to { background-position: 0 0, 300% 0; }
+}
+
+.badge {
+  font-size: 0.45rem;
+  color: var(--c);
+  text-shadow: 0 0 6px var(--c);
+}
+
+.lock {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 0.8rem;
+}
+
+.emoji {
+  font-size: 2.2rem;
+  line-height: 1.25;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--c) 70%, transparent));
+}
+
+.card.small .emoji {
+  font-size: 1.6rem;
+}
+
+.card.big .emoji {
+  font-size: 4rem;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.card.small .name {
+  font-size: 0.75rem;
+}
+
+.serial {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.gear {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.68rem;
+  color: var(--cyan);
+}
+
+.gear i {
+  font-style: normal;
+}
+
+.meta {
+  font-size: 0.45rem;
+  color: var(--yellow);
+  margin-top: 2px;
+}
+
+/* ---------- Blockchain Activity Log ---------- */
+.chainlog {
+  position: relative;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #02040e;
+  border: 2px solid var(--cyan);
+  box-shadow: 0 0 18px rgba(46, 242, 255, 0.35), inset 0 0 24px rgba(46, 242, 255, 0.08);
+  overflow: hidden;
+}
+
+.chainlog::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px);
+}
+
+.chainlog-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.chainlog-title {
+  font-size: 0.7rem;
+  color: var(--cyan);
+  text-shadow: 0 0 8px var(--cyan);
+}
+
+.chainlog-head small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.5rem;
+  color: var(--red);
+}
+
+.live i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 8px var(--red);
+  animation: blink 1s steps(2, start) infinite;
+}
+
+.chainlog-empty {
+  font-size: 0.55rem;
+  color: var(--green);
+  margin: 6px 0 2px;
+}
+
+.chainlog-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.logrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(46, 242, 255, 0.04);
+  border-left: 3px solid rgba(46, 242, 255, 0.35);
+  font-size: 0.82rem;
+}
+
+.logrow.newest {
+  border-left-color: var(--green);
+  background: rgba(61, 255, 139, 0.07);
+  animation: log-in 0.5s ease-out;
+}
+
+@keyframes log-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+    background: rgba(61, 255, 139, 0.25);
+  }
+}
+
+.blk {
+  font-size: 0.5rem;
+  color: var(--muted);
+}
+
+.act {
+  --c: var(--cyan);
+  font-size: 0.5rem;
+  color: var(--c);
+  text-shadow: 0 0 6px var(--c);
+  min-width: 9.5em;
+}
+
+.act.cyan { --c: var(--cyan); }
+
+.who {
+  font-size: 0.45rem;
+  color: #000;
+  background: var(--green);
+  padding: 3px 5px;
+  border-radius: 4px;
+}
+
+.txh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+}
+
+.txh code {
+  color: var(--text);
+}
+
+.copy {
+  font: 0.45rem "Press Start 2P", monospace;
+  color: var(--cyan);
+  background: transparent;
+  border: 1px solid var(--cyan);
+  border-radius: 4px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.copy:hover {
+  background: rgba(46, 242, 255, 0.15);
+}
+
+.copy.done {
+  color: #000;
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.detail {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  flex: 1 1 240px;
+}
+
+.part {
+  color: var(--text);
+}
+
+.part.plus {
+  color: var(--green);
+}
+
+.part.minus {
+  color: var(--yellow);
+}
+
+.part.burn {
+  color: var(--red);
+}
+
+.part.sep {
+  color: var(--muted);
+}
+
+/* [ผู้ซื้อ → ผู้ขาย] ของรายการ SHOP BUY */
+.parties {
+  font-size: 0.5rem;
+  color: #000;
+  background: var(--yellow);
+  padding: 3px 6px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(255, 210, 61, 0.6);
+}
+
+.gas {
+  font-size: 0.45rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+/* ---------- แผงควบคุม ---------- */
+.deck {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 18px 26px;
+  border-radius: 14px 14px 26px 26px;
+  background: linear-gradient(180deg, #1b0b3a, #0d0522);
+  border-top: 3px solid #4c2a8f;
+  box-shadow: inset 0 8px 18px rgba(0, 0, 0, 0.5);
+}
+
+.joystick {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #333 0 40%, #111 41%);
+  box-shadow: inset 0 0 10px #000;
+}
+
+.stick {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  margin: -30px 0 0 -17px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff8fa1, var(--red));
+  box-shadow: 0 10px 0 -4px #222, 0 0 12px rgba(255, 64, 88, 0.6);
+  animation: wiggle 4s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+  20% { transform: translateX(-4px) rotate(-6deg); }
+  40% { transform: translateX(4px) rotate(6deg); }
+  60% { transform: none; }
+}
+
+.coin-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: 2px solid var(--yellow);
+  background: #000;
+  color: var(--yellow);
+  cursor: pointer;
+  box-shadow: 0 0 16px rgba(255, 210, 61, 0.4);
+  font: inherit;
+}
+
+.coin-slot .pixel {
+  font-size: 0.65rem;
+}
+
+.coin-slot small {
+  color: var(--text);
+}
+
+.coin-slot:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.coin-slot:hover:not(:disabled) {
+  box-shadow: 0 0 26px rgba(255, 210, 61, 0.8);
+}
+
+.slot-hole {
+  width: 8px;
+  height: 30px;
+  border-radius: 4px;
+  background: #111;
+  border: 2px solid var(--yellow);
+}
+
+.deck-btns {
+  display: grid;
+  grid-template-columns: repeat(2, 34px);
+  gap: 10px;
+}
+
+.ab {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 50%, #fff), var(--c) 60%);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--c) 50%, #000), 0 0 10px color-mix(in srgb, var(--c) 60%, transparent);
+}
+
+/* ---------- busy / modal / footer ---------- */
+.busy {
+  position: fixed;
+  left: 50%;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  background: #000;
+  border: 2px solid var(--cyan);
+  color: var(--cyan);
+  padding: 12px 18px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 0 20px rgba(46, 242, 255, 0.45);
+  z-index: 20;
+  max-width: calc(100% - 32px);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid #123;
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 2, 12, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 30;
+}
+
+.modal-box {
+  --c: var(--r0);
+  background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--c) 30%, #0b0d2a), #06071a 70%);
+  border: 3px solid var(--c);
+  border-radius: 20px;
+  padding: 26px 22px;
+  text-align: center;
+  width: min(380px, 100%);
+  box-shadow: 0 0 50px color-mix(in srgb, var(--c) 60%, transparent);
+  animation: pop 0.35s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+.modal-box h2.pixel {
+  font-size: 1.05rem;
+  color: #fff;
+  text-shadow: 0 0 10px var(--c), 0 0 22px var(--c);
+}
+
+.modal-box.fail h2.pixel {
+  text-shadow: 0 0 10px var(--err);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+
+.foot {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: 18px;
+}

@@ -1,0 +1,21 @@
+# ---- ความลับ: ห้ามขึ้น git เด็ดขาด (มี PRIVATE_KEY) ----
+.env
+.env.*
+!.env.example
+
+# ---- dependencies ----
+node_modules/
+frontend/node_modules/
+
+# ---- ไฟล์ที่ Hardhat / Vite สร้างเอง ----
+artifacts/
+cache/
+typechain-types/
+coverage/
+coverage.json
+frontend/dist/
+
+# ---- อื่น ๆ ----
+*.log
+.DS_Store
+Thumbs.db
