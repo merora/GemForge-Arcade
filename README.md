@@ -135,7 +135,9 @@ To play:
 4. Play as usual. MetaMask asks you to confirm every transaction. A block takes about 12 seconds, so wait a little longer before **OPEN!**
 5. Every transaction in the Activity Log links to Etherscan.
 
-On Sepolia, **INSERT COIN** can be used once per day per address (faucet cooldown).
+On the Sepolia deployment, the faucet cooldown is set to 0 for the live demo, so **INSERT COIN** can be pressed any number of times
+([tx](https://sepolia.etherscan.io/tx/0xfcf3736ad3557d45b4b05ff01010b80defae7f26176b56a4499dda4835f81496)).
+A freshly deployed `GemToken` on a public network starts with a 1-day cooldown; the owner can change it with `setFaucetCooldown`.
 
 ### Deploy your own copy
 
